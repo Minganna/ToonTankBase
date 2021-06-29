@@ -39,6 +39,8 @@ private:
 	UParticleSystem* DeathParticle=nullptr;
 	UPROPERTY(EditAnywhere, Category = "Effects")
 	USoundBase* DeathSound = nullptr;
+	UPROPERTY(EditAnywhere, Category = "Effects")
+	TSubclassOf<UCameraShake> DeathShake;
 
 
 
