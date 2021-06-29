@@ -5,6 +5,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystemComponent.h"
 
 void AProjectileBase::OnHit(UPrimitiveComponent * HitComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, FVector NormalImpulse, const FHitResult & Hit)
 {
@@ -17,6 +18,8 @@ void AProjectileBase::OnHit(UPrimitiveComponent * HitComp, AActor * OtherActor, 
 	if (OtherActor&& OtherActor != this &&OtherActor != MyOwner)
 	{
 		UGameplayStatics::ApplyDamage(OtherActor, Damage, MyOwner->GetInstigatorController(), this, DamageType);
+		UGameplayStatics::SpawnEmitterAtLocation(this, HitParticle, GetActorLocation());
+		UGameplayStatics::PlaySoundAtLocation(this,HitSound, GetActorLocation());
 	}
 	
 	// Play a bunch of effect here during the polish phase. -TODO
@@ -33,6 +36,8 @@ AProjectileBase::AProjectileBase()
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Projectile Mesh"));
 	ProjectileMesh->OnComponentHit.AddDynamic(this, &AProjectileBase::OnHit);
 	RootComponent = ProjectileMesh;
+	ParticleTrail = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Bullet Trail"));
+	ParticleTrail->SetupAttachment(RootComponent);
 
 	ProjectileMovements = CreateDefaultSubobject <UProjectileMovementComponent>(TEXT("Projectile Movements"));
 	//Can be changed the value if I want to chenge speed overtime
@@ -45,6 +50,8 @@ AProjectileBase::AProjectileBase()
 void AProjectileBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	UGameplayStatics::PlaySoundAtLocation(this, LaunchSound, GetActorLocation());
 	
 }
 
