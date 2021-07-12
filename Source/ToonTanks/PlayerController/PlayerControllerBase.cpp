@@ -2,6 +2,7 @@
 
 
 #include "PlayerControllerBase.h"
+#include "TimerManager.h"
 
 
 
@@ -17,4 +18,10 @@ void APlayerControllerBase::SetPlayerEnableState(bool SetPlayerEnabled)
 	}
 
 	bShowMouseCursor = SetPlayerEnabled;
+}
+
+void APlayerControllerBase::GameHasEnded(AActor * EndGameFocus, bool bIsWinner)
+{
+	Super::GameHasEnded(EndGameFocus, bIsWinner);
+	GetWorldTimerManager().SetTimer(RestartTimer, this, &APlayerController::RestartLevel, RestartDelay);
 }

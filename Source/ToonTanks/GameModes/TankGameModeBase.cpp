@@ -68,6 +68,10 @@ void ATankGameModeBase::HandleGameStart()
 void ATankGameModeBase::HandleGameOver(bool PlayerWon)
 {
 	GameOver(PlayerWon);
+	if (PlayerControllerRef)
+	{
+		PlayerControllerRef->GameHasEnded(PlayerTank, PlayerWon);
+	}
 }
 
 
